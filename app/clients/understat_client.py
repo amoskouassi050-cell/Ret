@@ -34,10 +34,14 @@ class UnderstatClient:
         season_year = season or _current_season_year()
         team_slug = team.replace(" ", "%20")
         url = f"{self.base_url}/team/{team_slug}/{season_year}"
-        async with httpx.AsyncClient(timeout=30, headers=DEFAULT_HEADERS) as client:
-            r = await client.get(url)
-            r.raise_for_status()
-            html = r.text
+        try:
+            async with httpx.AsyncClient(timeout=30, headers=DEFAULT_HEADERS) as client:
+                r = await client.get(url)
+                if r.status_code != 200:
+                    return []
+                html = r.text
+        except Exception:
+            return []
         m = re.search(r"var\s+matchesData\s*=\s*JSON.parse\('([^']+)'\)", html)
         if not m:
             return []
@@ -94,6 +98,8 @@ class UnderstatClient:
         combined: List[Dict[str, Any]] = []
         for year in [season_year, season_year - 1, season_year - 2]:
             matches = await self._fetch_team_matches(team=home_team, season=year)
+            if not matches:
+                continue
             h2h = [m for m in matches if (m.get("h_team") == home_team and m.get("a_team") == away_team) or (m.get("h_team") == away_team and m.get("a_team") == home_team)]
             combined.extend(h2h)
             if len(combined) >= last_n:

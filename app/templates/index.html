@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Predictor Pro</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Bot de pronostics 100% data-driven</h1>
+    <form method="get" action="/predict" target="_blank" class="card">
+      <label>Équipe à domicile</label>
+      <input name="home_team" placeholder="Manchester City" required />
+      <label>Équipe à l'extérieur</label>
+      <input name="away_team" placeholder="Arsenal" required />
+      <label>Date et heure du match (UTC, optionnel)</label>
+      <input name="match_date" placeholder="2025-02-15T17:30:00" />
+      <button type="submit">Prédire</button>
+    </form>
+    <p class="hint">Astuce: utilisez les noms d'équipes Understat (ex: "Manchester City", "Arsenal").</p>
+  </main>
+</body>
+</html>
